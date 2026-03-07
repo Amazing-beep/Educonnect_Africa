@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - EduConnect Africa</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="/" style="color: white; text-decoration: none;">EduConnect Africa</a></div>
+        <div>
+            <span>Welcome, <%= user.name %></span>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Student Dashboard</h1>
+        
+        <section>
+            <h2>Book a Session</h2>
+            <form action="/book-session" method="POST">
+                <select name="mentor_id" required>
+                    <option value="">Select a Mentor</option>
+                    <% mentors.forEach(mentor => { %>
+                        <option value="<%= mentor.id %>"><%= mentor.name %></option>
+                    <% }) %>
+                </select>
+                <input type="date" name="date" required>
+                <input type="time" name="time" required>
+                <button type="submit">Book 30-min Session</button>
+            </form>
+        </section>
+
+        <section style="margin-top: 3rem;">
+            <h2>My Booked Sessions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mentor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% sessions.forEach(session => { %>
+                        <tr>
+                            <td><%= session.mentor_name %></td>
+                            <td><%= session.date %></td>
+                            <td><%= session.time %></td>
+                            <td class="status-<%= session.status %>"><%= session.status.toUpperCase() %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect Africa</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">EduConnect Africa</div>
+        <div>
+            <% if (user) { %>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            <% } else { %>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            <% } %>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Welcome to EduConnect Africa</h1>
+        <p>Connecting high school graduates with mentors for 15-30 minute guidance sessions.</p>
+        <% if (!user) { %>
+            <div style="margin-top: 2rem;">
+                <a href="/register" class="button" style="padding: 1rem; background: #3498db; color: white; text-decoration: none; border-radius: 4px;">Get Started Today</a>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

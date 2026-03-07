@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Dashboard - EduConnect Africa</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="/" style="color: white; text-decoration: none;">EduConnect Africa</a></div>
+        <div>
+            <span>Welcome, <%= user.name %></span>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Mentor Dashboard</h1>
+        
+        <% if (user.approved === 0) { %>
+            <p class="error">Your account is pending admin approval. You cannot set availability or receive bookings yet.</p>
+        <% } else { %>
+            <section>
+                <h2>Set Availability</h2>
+                <form action="/set-availability" method="POST">
+                    <input type="date" name="date" required>
+                    <input type="time" name="time" required>
+                    <button type="submit">Add Available Slot</button>
+                </form>
+            </section>
+
+            <section style="margin-top: 3rem;">
+                <h2>Booking Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% sessions.forEach(session => { %>
+                            <tr>
+                                <td><%= session.student_name %></td>
+                                <td><%= session.date %></td>
+                                <td><%= session.time %></td>
+                                <td class="status-<%= session.status %>"><%= session.status.toUpperCase() %></td>
+                                <td>
+                                    <% if (session.status === 'pending') { %>
+                                        <form action="/update-session" method="POST" style="display: inline; flex-direction: row; gap: 0.5rem;">
+                                            <input type="hidden" name="session_id" value="<%= session.id %>">
+                                            <button type="submit" name="status" value="confirmed" style="background: #27ae60; padding: 0.5rem;">Confirm</button>
+                                            <button type="submit" name="status" value="cancelled" style="background: #e74c3c; padding: 0.5rem;">Cancel</button>
+                                        </form>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+        <% } %>
+    </div>
+</body>
+</html>

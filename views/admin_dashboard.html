@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EduConnect Africa</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="/" style="color: white; text-decoration: none;">EduConnect Africa</a></div>
+        <div>
+            <span>Welcome, Admin</span>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        
+        <section>
+            <h2>Manage Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(u => { %>
+                        <tr>
+                            <td><%= u.name %></td>
+                            <td><%= u.email %></td>
+                            <td><%= u.role.toUpperCase() %></td>
+                            <td><%= u.approved ? 'Approved' : 'Pending' %></td>
+                            <td>
+                                <% if (u.role === 'mentor' && !u.approved) { %>
+                                    <form action="/approve-mentor" method="POST">
+                                        <input type="hidden" name="user_id" value="<%= u.id %>">
+                                        <button type="submit" style="background: #27ae60; padding: 0.5rem;">Approve Mentor</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>
