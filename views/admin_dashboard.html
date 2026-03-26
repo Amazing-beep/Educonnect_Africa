@@ -17,6 +17,21 @@
     <div class="container">
         <h1>Admin Dashboard</h1>
         
+        <section style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <div style="background: white; flex: 1; padding: 1.5rem; border-radius: 8px; border: 1px solid #ddd; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #7f8c8d;">Total Mentors</h3>
+                <p style="font-size: 2.5rem; color: #3498db; margin: 0; font-weight: bold;"><%= stats.mentors %></p>
+            </div>
+            <div style="background: white; flex: 1; padding: 1.5rem; border-radius: 8px; border: 1px solid #ddd; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #7f8c8d;">Total Bookings</h3>
+                <p style="font-size: 2.5rem; color: #e74c3c; margin: 0; font-weight: bold;"><%= stats.bookings %></p>
+            </div>
+            <div style="background: white; flex: 1; padding: 1.5rem; border-radius: 8px; border: 1px solid #ddd; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #7f8c8d;">Active Users</h3>
+                <p style="font-size: 2.5rem; color: #2ecc71; margin: 0; font-weight: bold;"><%= stats.activeUsers %></p>
+            </div>
+        </section>
+
         <section>
             <h2>Manage Users</h2>
             <table>

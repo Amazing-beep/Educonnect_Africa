@@ -13,8 +13,16 @@ db.serialize(() => {
         email TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
         role TEXT CHECK(role IN ('student', 'mentor', 'admin')) NOT NULL,
-        approved BOOLEAN DEFAULT 0
+        approved BOOLEAN DEFAULT 0,
+        bio TEXT,
+        university TEXT,
+        field_of_study TEXT
     )`);
+
+    // Migrations for existing DB users table
+    db.run('ALTER TABLE users ADD COLUMN bio TEXT', () => {});
+    db.run('ALTER TABLE users ADD COLUMN university TEXT', () => {});
+    db.run('ALTER TABLE users ADD COLUMN field_of_study TEXT', () => {});
 
     // Availability Table
     db.run(`CREATE TABLE IF NOT EXISTS availability (
@@ -22,8 +30,12 @@ db.serialize(() => {
         mentor_id INTEGER,
         available_date TEXT NOT NULL,
         available_time TEXT NOT NULL,
+        is_booked BOOLEAN DEFAULT 0,
         FOREIGN KEY (mentor_id) REFERENCES users(id)
     )`);
+
+    // Migrations for existing DB availability table
+    db.run('ALTER TABLE availability ADD COLUMN is_booked BOOLEAN DEFAULT 0', () => {});
 
     // Sessions Table
     db.run(`CREATE TABLE IF NOT EXISTS sessions (

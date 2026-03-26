@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= mentor.name %> - Mentor Profile</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="/" style="color: white; text-decoration: none;">EduConnect Africa</a></div>
+        <div>
+            <a href="/dashboard">Back to Dashboard</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1><%= mentor.name %>'s Profile</h1>
+        
+        <div class="profile-card" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <p><strong>University:</strong> <%= mentor.university || 'Not specified' %></p>
+            <p><strong>Field of Study:</strong> <%= mentor.field_of_study || 'Not specified' %></p>
+            <p><strong>Bio:</strong> <%= mentor.bio || 'No bio available.' %></p>
+        </div>
+
+        <section>
+            <h2>Book a Session</h2>
+            <% if (availability && availability.length > 0) { %>
+                <form action="/book-session" method="POST">
+                    <input type="hidden" name="mentor_id" value="<%= mentor.id %>">
+                    <label for="slot">Select an Available Slot:</label>
+                    <select name="slot" id="slot" required>
+                        <option value="">-- Choose a time slot --</option>
+                        <% availability.forEach(slot => { %>
+                            <option value="<%= slot.id %>"><%= slot.available_date %> at <%= slot.available_time %></option>
+                        <% }) %>
+                    </select>
+                    <button type="submit" style="margin-top: 1rem;">Book 30-min Session</button>
+                </form>
+            <% } else { %>
+                <p>This mentor currently has no available time slots. Please check back later.</p>
+            <% } %>
+        </section>
+    </div>
+</body>
+</html>

@@ -22,13 +22,34 @@
             <input type="text" name="name" placeholder="Full Name" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
-            <select name="role" required>
+            <select name="role" id="roleSelect" required onchange="toggleMentorFields()">
                 <option value="student">Student</option>
                 <option value="mentor">Mentor</option>
             </select>
+            
+            <div id="mentorFields" style="display: none; flex-direction: column; gap: 1rem; margin-top: 1rem; margin-bottom: 1rem;">
+                <textarea name="bio" placeholder="Short Bio"></textarea>
+                <input type="text" name="university" placeholder="University">
+                <input type="text" name="field_of_study" placeholder="Field of Study">
+            </div>
+
             <button type="submit">Register</button>
         </form>
         <p>Already have an account? <a href="/login">Login here</a></p>
     </div>
+
+    <script>
+        function toggleMentorFields() {
+            const role = document.getElementById('roleSelect').value;
+            const mentorFields = document.getElementById('mentorFields');
+            if(role === 'mentor') {
+                mentorFields.style.display = 'flex';
+                mentorFields.querySelectorAll('input, textarea').forEach(el => el.required = true);
+            } else {
+                mentorFields.style.display = 'none';
+                mentorFields.querySelectorAll('input, textarea').forEach(el => el.required = false);
+            }
+        }
+    </script>
 </body>
 </html>

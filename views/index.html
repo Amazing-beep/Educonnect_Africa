@@ -19,12 +19,15 @@
             <% } %>
         </div>
     </nav>
-    <div class="container">
-        <h1>Welcome to EduConnect Africa</h1>
-        <p>Connecting high school graduates with mentors for 15-30 minute guidance sessions.</p>
+    <div class="container" style="text-align: center; padding: 4rem 2rem;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">Welcome to EduConnect Africa</h1>
+        <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2.5rem;">
+            Connecting fast-paced high school graduates with expert mentors for 15-30 minute guidance sessions. Shape your future today.
+        </p>
         <% if (!user) { %>
-            <div style="margin-top: 2rem;">
-                <a href="/register" class="button" style="padding: 1rem; background: #3498db; color: white; text-decoration: none; border-radius: 4px;">Get Started Today</a>
+            <div>
+                <a href="/register" class="button" style="font-size: 1.1rem; padding: 1rem 2rem;">Get Started Today</a>
+                <p style="margin-top: 1rem;">Already have an account? <a href="/login" style="color: var(--primary); font-weight: 500;">Login here</a></p>
             </div>
         <% } %>
     </div>
