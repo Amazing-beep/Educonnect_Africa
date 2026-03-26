@@ -40,8 +40,6 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,15 +48,6 @@
                             <td><%= u.name %></td>
                             <td><%= u.email %></td>
                             <td><%= u.role.toUpperCase() %></td>
-                            <td><%= u.approved ? 'Approved' : 'Pending' %></td>
-                            <td>
-                                <% if (u.role === 'mentor' && !u.approved) { %>
-                                    <form action="/approve-mentor" method="POST">
-                                        <input type="hidden" name="user_id" value="<%= u.id %>">
-                                        <button type="submit" style="background: #27ae60; padding: 0.5rem;">Approve Mentor</button>
-                                    </form>
-                                <% } %>
-                            </td>
                         </tr>
                     <% }) %>
                 </tbody>

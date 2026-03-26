@@ -13,16 +13,17 @@ db.serialize(() => {
         email TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
         role TEXT CHECK(role IN ('student', 'mentor', 'admin')) NOT NULL,
-        approved BOOLEAN DEFAULT 0,
         bio TEXT,
         university TEXT,
-        field_of_study TEXT
+        field_of_study TEXT,
+        profile_image TEXT
     )`);
 
     // Migrations for existing DB users table
     db.run('ALTER TABLE users ADD COLUMN bio TEXT', () => {});
     db.run('ALTER TABLE users ADD COLUMN university TEXT', () => {});
     db.run('ALTER TABLE users ADD COLUMN field_of_study TEXT', () => {});
+    db.run('ALTER TABLE users ADD COLUMN profile_image TEXT', () => {});
 
     // Availability Table
     db.run(`CREATE TABLE IF NOT EXISTS availability (
@@ -55,8 +56,8 @@ db.serialize(() => {
     db.get('SELECT * FROM users WHERE email = ?', [adminEmail], (err, row) => {
         if (!row) {
             const hashedPassword = bcrypt.hashSync('admin123', 10);
-            db.run('INSERT INTO users (name, email, password, role, approved) VALUES (?, ?, ?, ?, ?)', 
-                ['System Admin', adminEmail, hashedPassword, 'admin', 1]);
+            db.run('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', 
+                ['System Admin', adminEmail, hashedPassword, 'admin']);
             console.log('Admin user created: admin@educonnect.africa / admin123');
         }
     });

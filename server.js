@@ -4,6 +4,25 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const db = require('./database');
+const multer = require('multer');
+const fs = require('fs');
+
+// Ensure uploads dir exists
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Set up multer storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadsDir)
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+});
+const upload = multer({ storage: storage });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,13 +72,13 @@ app.get('/register', (req, res) => {
     res.render('register', { error: null });
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', upload.single('profile_image'), (req, res) => {
     const { name, email, password, role, bio, university, field_of_study } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const approved = role === 'student' ? 1 : 0; // Students are auto-approved, mentors need admin approval
+    const profile_image = req.file ? '/uploads/' + req.file.filename : null;
 
-    db.run('INSERT INTO users (name, email, password, role, approved, bio, university, field_of_study) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-        [name, email, hashedPassword, role, approved, bio || null, university || null, field_of_study || null], (err) => {
+    db.run('INSERT INTO users (name, email, password, role, bio, university, field_of_study, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+        [name, email, hashedPassword, role, bio || null, university || null, field_of_study || null, profile_image], (err) => {
         if (err) {
             return res.render('register', { error: 'Email already exists or invalid data' });
         }
@@ -74,7 +93,7 @@ app.get('/logout', (req, res) => {
 
 app.get('/mentor/:id', isAuthenticated, (req, res) => {
     const mentorId = req.params.id;
-    db.get('SELECT id, name, email, bio, university, field_of_study FROM users WHERE id = ? AND role = "mentor"', [mentorId], (err, mentor) => {
+    db.get('SELECT id, name, email, bio, university, field_of_study, profile_image FROM users WHERE id = ? AND role = "mentor"', [mentorId], (err, mentor) => {
         if (!mentor) return res.redirect('/dashboard');
         
         db.all('SELECT * FROM availability WHERE mentor_id = ? AND is_booked = 0', [mentorId], (err, availability) => {
@@ -86,7 +105,7 @@ app.get('/mentor/:id', isAuthenticated, (req, res) => {
 app.get('/dashboard', isAuthenticated, (req, res) => {
     const user = req.session.user;
     if (user.role === 'student') {
-        let query = 'SELECT * FROM users WHERE role = "mentor" AND approved = 1';
+        let query = 'SELECT * FROM users WHERE role = "mentor"';
         let params = [];
         if (req.query.search) {
             query += ' AND (name LIKE ? OR field_of_study LIKE ? OR university LIKE ?)';
@@ -187,14 +206,7 @@ app.post('/update-session', isAuthenticated, (req, res) => {
     });
 });
 
-// Admin: Approve Mentor
-app.post('/approve-mentor', isAuthenticated, (req, res) => {
-    const { user_id } = req.body;
-    db.run('UPDATE users SET approved = 1 WHERE id = ?', [user_id], (err) => {
-        res.redirect('/dashboard');
-    });
-});
-
+// Admin approve mentor completely deleted here
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

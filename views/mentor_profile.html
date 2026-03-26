@@ -17,10 +17,13 @@
     <div class="container">
         <h1><%= mentor.name %>'s Profile</h1>
         
-        <div class="profile-card" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-            <p><strong>University:</strong> <%= mentor.university || 'Not specified' %></p>
-            <p><strong>Field of Study:</strong> <%= mentor.field_of_study || 'Not specified' %></p>
-            <p><strong>Bio:</strong> <%= mentor.bio || 'No bio available.' %></p>
+        <div class="profile-card" style="background: var(--surface); padding: 1.5rem; border-radius: var(--radius); margin-bottom: 2rem; box-shadow: var(--shadow); display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+            <img src="<%= mentor.profile_image || 'https://via.placeholder.com/150?text=Avatar' %>" alt="<%= mentor.name %>" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
+            <div style="flex: 1; min-width: 250px;">
+                <p style="margin: 0.5rem 0;"><strong>University:</strong> <%= mentor.university || 'Not specified' %></p>
+                <p style="margin: 0.5rem 0;"><strong>Field of Study:</strong> <%= mentor.field_of_study || 'Not specified' %></p>
+                <p style="margin: 0.5rem 0;"><strong>Bio:</strong> <%= mentor.bio || 'No bio available.' %></p>
+            </div>
         </div>
 
         <section>
