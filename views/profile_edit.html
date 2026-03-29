@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - EduConnect Africa</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="/" style="color: white; text-decoration: none;">EduConnect Africa</a></div>
+        <div>
+            <span>Welcome, <%= user.name %></span>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container" style="max-width: 600px;">
+        <h1>Edit Profile</h1>
+        <% if (locals.error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+        
+        <form action="/profile/edit" method="POST" enctype="multipart/form-data">
+            <div style="text-align: center; margin-bottom: 1rem;">
+                <img src="<%= user.profile_image || 'https://via.placeholder.com/100?text=Avatar' %>" alt="Profile Image" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border);">
+            </div>
+            
+            <label>Profile Image (Optional)
+                <input type="file" name="profile_image" accept="image/*" style="width: 100%; margin-top: 0.5rem;">
+            </label>
+
+            <label>Full Name
+                <input type="text" name="name" value="<%= user.name %>" required style="width: 100%; margin-top: 0.5rem;">
+            </label>
+            
+            <label>Email (Cannot be changed)
+                <input type="email" value="<%= user.email %>" disabled style="width: 100%; margin-top: 0.5rem; background-color: #f3f4f6; cursor: not-allowed;">
+            </label>
+            
+            <label>Bio
+                <textarea name="bio" rows="4" style="width: 100%; margin-top: 0.5rem;"><%= user.bio || '' %></textarea>
+            </label>
+            
+            <label>University
+                <input type="text" name="university" value="<%= user.university || '' %>" style="width: 100%; margin-top: 0.5rem;">
+            </label>
+            
+            <label>Field of Study
+                <input type="text" name="field_of_study" value="<%= user.field_of_study || '' %>" style="width: 100%; margin-top: 0.5rem;">
+            </label>
+
+            <button type="submit" style="margin-top: 1rem; width: 100%;">Save Changes</button>
+            <a href="/dashboard" style="text-align: center; display: block; margin-top: 1rem; color: var(--text-muted); text-decoration: none;">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

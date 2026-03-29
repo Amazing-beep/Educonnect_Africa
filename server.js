@@ -91,6 +91,67 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
+app.get('/profile/edit', isAuthenticated, (req, res) => {
+    db.get('SELECT * FROM users WHERE id = ?', [req.session.user.id], (err, user) => {
+        if (!user) return res.redirect('/dashboard');
+        res.render('profile_edit', { user, error: req.query.error });
+    });
+});
+
+app.post('/profile/edit', isAuthenticated, upload.single('profile_image'), (req, res) => {
+    const { name, bio, university, field_of_study } = req.body;
+    const userId = req.session.user.id;
+    
+    if (!name) return res.redirect('/profile/edit?error=Name is required');
+
+    db.get('SELECT profile_image FROM users WHERE id = ?', [userId], (err, row) => {
+        let newImage = row ? row.profile_image : null;
+        if (req.file) {
+            newImage = '/uploads/' + req.file.filename;
+            if (row && row.profile_image && row.profile_image.startsWith('/uploads/')) {
+                const oldPath = path.join(__dirname, 'public', row.profile_image);
+                if (fs.existsSync(oldPath)) {
+                    try { fs.unlinkSync(oldPath); } catch (e) {}
+                }
+            }
+        }
+        
+        db.run('UPDATE users SET name = ?, bio = ?, university = ?, field_of_study = ?, profile_image = ? WHERE id = ?', 
+            [name, bio || null, university || null, field_of_study || null, newImage, userId], function(err) {
+            if (err) {
+                return res.redirect('/profile/edit?error=Failed to update profile');
+            }
+            req.session.user.name = name;
+            req.session.user.bio = bio || null;
+            req.session.user.university = university || null;
+            req.session.user.field_of_study = field_of_study || null;
+            req.session.user.profile_image = newImage;
+            res.redirect('/dashboard?msg=profile_updated');
+        });
+    });
+});
+
+app.post('/profile/delete', isAuthenticated, (req, res) => {
+    const userId = req.session.user.id;
+    
+    db.run('DELETE FROM sessions WHERE student_id = ? OR mentor_id = ?', [userId, userId], (err) => {
+        db.run('DELETE FROM availability WHERE mentor_id = ?', [userId], (err) => {
+            db.get('SELECT profile_image FROM users WHERE id = ?', [userId], (err, row) => {
+                if (row && row.profile_image && row.profile_image.startsWith('/uploads/')) {
+                    const oldPath = path.join(__dirname, 'public', row.profile_image);
+                    if (fs.existsSync(oldPath)) {
+                        try { fs.unlinkSync(oldPath); } catch (e) {}
+                    }
+                }
+                db.run('DELETE FROM users WHERE id = ?', [userId], (err) => {
+                    req.session.destroy();
+                    res.redirect('/');
+                });
+            });
+        });
+    });
+});
+
 app.get('/mentor/:id', isAuthenticated, (req, res) => {
     const mentorId = req.params.id;
     db.get('SELECT id, name, email, bio, university, field_of_study, profile_image FROM users WHERE id = ? AND role = "mentor"', [mentorId], (err, mentor) => {
