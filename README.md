@@ -1,53 +1,72 @@
-# EduConnect Africa - MVP
+# EduConnect Africa
 
-EduConnect Africa is a web application designed to connect high school graduates with mentors for 15-30 minute guidance sessions. Built with Node.js, Express, and SQLite, this upgraded MVP features mentor profiling, availability scheduling, robust booking flows, and a modern responsive UI.
+EduConnect Africa is a lightweight web application designed to bridge the gap between fast-paced high school graduates and expert mentors through 15-30 minute guidance sessions. Built as a minimum viable product (MVP), it provides a seamless platform for scheduling, managing profiles, and coordinating mentorship opportunities.
 
-## Features Added
-- **Mentor Profiles:** Mentors can add Bios, University names, and Fields of Study.
-- **Search & Filter:** Students can search mentors by keywords or fields.
-- **Availability Management:** Mentors set specific active slots, which vanish once booked.
-- **Cancellations:** Users cancelling sessions will free up the slot automatically.
-- **Admin Dashboard:** Displays aggregate mock stats for active mentors, bookings, and users.
-- **UI/UX Modernization:** Mobile-responsive deep blue and pink accent theme with custom CSS.
-- **Simulated Notifications:** Email notifications are simulated in the Node console.
+## System Actors
+- **Student**: Can search for mentors, view profiles, and book 15-30 minute guidance sessions.
+- **Mentor**: Can customize their profile, set up availability slots, and manage incoming session requests.
+- **Admin**: Can view platform aggregate statistics (total users, mentors, and bookings) and oversee the system.
 
-## Tech Stack
+## Key Features (SRS Alignment)
+- **FR1 - User Authentication**: Secure login and registration flows using bcrypt for password hashing.
+- **FR2 - Profile Management**: Mentors and students can update their bios, universities, fields of study, and upload profile images.
+- **FR3 - Availability System**: Mentors can dictate specific open time slots for bookings.
+- **FR4 - Session Booking Engine**: Students can seamlessly book available slots (automatically preventing double-booking).
+- **FR5 - Notifications**: Simulated email notifications for booking confirmations and cancellations.
+- **FR6 - Mentor Discovery**: Students can search for mentors by name, university, or field of study.
+- **FR7 - Dashboard Management**: Dedicated dashboards for Students, Mentors, and Admins to manage sessions and platform data.
+
+## Technologies Used
 - **Backend:** Node.js, Express.js
-- **Database:** SQLite (File-based local DB)
-- **Frontend:** HTML, Custom CSS layout (Flexbox/Grid), embedded JS
+- **Database:** SQLite (Local file-based database for simplicity)
+- **Frontend:** HTML, Custom CSS layout (Flexbox/Grid), embedded vanilla JS
 - **Templating:** EJS
 
-## Local Setup Instructions
+---
 
-1. **Install Dependencies:**
+## Setup Instructions
+
+Follow these exact steps to run the application locally on your machine.
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd Educonnect_Africa-4
+   ```
+
+2. **Install dependencies:**
+   Make sure Node.js is installed on your machine. Run the following command to download all necessary packages:
    ```bash
    npm install
    ```
 
-2. **Run the Application:**
+3. **Set up environment variables (if needed):**
+   If you plan to use real email notifications instead of the simulated console logs, copy the provided `.env.example` file to `.env` and fill in your SMTP credentials:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Initialize the Database:**
+   *Note: The SQLite database (`educonnect.db`) is automatically created and seeded when the server starts. You do not need to run any manual database migrations.*
+
+5. **Run the application:**
    ```bash
    npm start
    ```
-   The server will start on `http://localhost:3000`.
 
-## Deployment Instructions
+6. **Open in browser:**
+   Open your preferred web browser and navigate to:
+   [http://localhost:3000](http://localhost:3000)
 
-This application is ready to deploy to cloud providers like **Render** or **Vercel** with minimal setup.
+### Notes on file storage:
+The application uses the `/public/uploads` directory to store uploaded user profile pictures. This folder is generated automatically when the server runs, but make sure the application has write permissions to that directory.
 
-### Heroku / Render deployment
-1. Push this repository to GitHub.
-2. Connect your GitHub account to Render.
-3. Create a **New Web Service**, selecting this repository.
-4. Render will automatically detect Node.js.
-5. Setup the Build Command: `npm install`
-6. Setup the Start Command: `npm start`
-7. Click Deploy. *Note: SQLite will be ephemeral on free instances in Render unless attached to a persistent disk.*
+---
 
-### Vercel Deployment
-To deploy full-stack Express apps easily to Vercel, you can simply use the Vercel CLI or Dashboard. Ensure you configure it properly to route Express APIs, though Render/Railway are typically better suited for raw Node+SQLite applications than serverless platforms like Vercel.
+## Links & Documentation
+- [Live Demo Link](#) *(Placeholder)*
+- [SRS Document Link](#) *(Placeholder)*
 
 ## Demo Credentials
-
-- **Admin Account:** `admin@educonnect.africa` / `admin123`
-- Register manually as a Mentor or Student to test workflows.
-
+- **Admin Account**: `admin@educonnect.africa` / `admin123`
+- *To simulate student or mentor flows, simply register a new account from the homepage.*

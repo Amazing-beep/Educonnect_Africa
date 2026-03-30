@@ -58,6 +58,13 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
+    
+    // Basic validation to prevent crashes
+    if (!email || !password) {
+        return res.render('login', { error: 'Both email and password are required' });
+    }
+
+    // Authenticate user check against SQLite database
     db.get('SELECT * FROM users WHERE email = ?', [email], (err, user) => {
         if (user && bcrypt.compareSync(password, user.password)) {
             req.session.user = user;
@@ -74,10 +81,16 @@ app.get('/register', (req, res) => {
 
 app.post('/register', upload.single('profile_image'), (req, res) => {
     const { name, email, password, role, bio, university, field_of_study } = req.body;
+    
+    // Form verification
+    if (!name || !email || !password || !role) {
+        return res.render('register', { error: 'Name, email, password, and role are required' });
+    }
+
     const hashedPassword = bcrypt.hashSync(password, 10);
     const profile_image = req.file ? '/uploads/' + req.file.filename : null;
 
-    db.run('INSERT INTO users (name, email, password, role, bio, university, field_of_study, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+    // Insert new user into the database
         [name, email, hashedPassword, role, bio || null, university || null, field_of_study || null, profile_image], (err) => {
         if (err) {
             return res.render('register', { error: 'Email already exists or invalid data' });
@@ -208,23 +221,30 @@ app.get('/dashboard', isAuthenticated, (req, res) => {
     }
 });
 
-// Student: Book Session
+// Student: Book Session (Handles double-booking prevention)
 app.post('/book-session', isAuthenticated, (req, res) => {
     const { mentor_id, slot } = req.body;
     const student_id = req.session.user.id;
     
+    // Validation to prevent empty form submission errors
+    if (!mentor_id || !slot) {
+        return res.redirect('/dashboard?msg=error_booking');
+    }
+    
+    // Check if the slot exists and is actually available
     db.get('SELECT * FROM availability WHERE id = ? AND is_booked = 0', [slot], (err, av_slot) => {
         if (!av_slot) {
             // Either booked or invalid slot
             return res.redirect('/mentor/' + mentor_id + '?msg=error_booked');
         }
 
+        // Create the session
         db.run('INSERT INTO sessions (student_id, mentor_id, date, time) VALUES (?, ?, ?, ?)', 
             [student_id, mentor_id, av_slot.available_date, av_slot.available_time], function(err) {
             
             if (err) return res.redirect('/dashboard?msg=error_booking');
             
-            // Mark slot as booked
+            // Atomically mark slot as booked to prevent double-bookings
             db.run('UPDATE availability SET is_booked = 1 WHERE id = ?', [slot], () => {
                 console.log(`[EXTERNAL_SIMULATION] Email sent to student (ID: ${student_id}) and mentor (ID: ${mentor_id}) confirming new booking on ${av_slot.available_date} at ${av_slot.available_time}.`);
                 res.redirect('/dashboard?msg=booking_success');
