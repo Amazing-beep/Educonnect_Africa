@@ -289,6 +289,4 @@ app.post('/update-session', isAuthenticated, (req, res) => {
 });
 
 // Admin approve mentor completely deleted here
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

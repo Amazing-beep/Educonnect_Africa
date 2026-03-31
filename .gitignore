@@ -1,0 +1,7 @@
+node_modules/
+.env
+error.log
+error.txt
+url.txt
+url.txt.jpg
+educonnect.db
