@@ -65,8 +65,8 @@ The application uses the `/public/uploads` directory to store uploaded user prof
 ---
 
 ## Links & Documentation
-- [Live Demo Link](#) *(Placeholder)*
-- [SRS Document Link](#) *(Placeholder)*
+- https://youtu.be/aq-IFJS3STE(#)
+- https://docs.google.com/document/d/1PVB3ZrEETLAlLugVIKRTPVTsheRyEm3HjX_p5-7UPk0/edit?usp=sharing(#)
 
 ## Demo Credentials
 - **Admin Account**: `admin@educonnect.africa` / `admin123`
