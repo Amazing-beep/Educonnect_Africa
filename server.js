@@ -91,6 +91,7 @@ app.post('/register', upload.single('profile_image'), (req, res) => {
     const profile_image = req.file ? '/uploads/' + req.file.filename : null;
 
     // Insert new user into the database
+    db.run('INSERT INTO users (name, email, password, role, bio, university, field_of_study, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
         [name, email, hashedPassword, role, bio || null, university || null, field_of_study || null, profile_image], (err) => {
         if (err) {
             return res.render('register', { error: 'Email already exists or invalid data' });

@@ -40,8 +40,9 @@ Follow these exact steps to run the application locally on your machine.
    npm install
    ```
 
-3. **Set up environment variables (if needed):**
-   If you plan to use real email notifications instead of the simulated console logs, copy the provided `.env.example` file to `.env` and fill in your SMTP credentials:
+3. **Set up environment variables:**
+   - **`PORT`** (Optional): Define the port for the web server to listen on (defaults to 3000).
+   - **Email Notifications** (Optional): If you plan to use real email notifications instead of the simulated console logs, copy the provided `.env.example` file to `.env` and fill in your SMTP credentials:
    ```bash
    cp .env.example .env
    ```
